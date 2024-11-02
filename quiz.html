@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de Segurança da Informação</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }
+        #quiz { background: white; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1 { text-align: center; }
+        .question { margin-bottom: 20px; }
+        button { padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 5px; margin: 5px; font-size: 16px; cursor: pointer; }
+        button:hover { background: #218838; }
+        .result { margin-top: 20px; font-weight: bold; }
+        .share { text-align: center; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<div id="quiz">
+    <h1>Quiz de Segurança da Informação</h1>
+    <div class="question" id="question"></div>
+    <div id="answers"></div>
+    <button id="next" style="display: none;">Próxima Pergunta</button>
+    <div class="result" id="result"></div>
+    <div class="share">
+        <p>Se tiver problemas, <a href="https://www.seusite.com/quiz" target="_blank">clique aqui</a> para abrir em um navegador.</p>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        // Suas perguntas...
+    ];
+
+    let correctAnswersCount = 0;
+
+    function showQuestion() {
+        const questionContainer = document.getElementById('question');
+        const answersContainer = document.getElementById('answers');
+        const nextButton = document.getElementById('next');
+        const resultContainer = document.getElementById('result');
+
+        resultContainer.innerHTML = "";
+        nextButton.style.display = "none";
+
+        // Escolher uma pergunta aleatória
+        const randomIndex = Math.floor(Math.random() * questions.length);
+        const question = questions[randomIndex];
+
+        questionContainer.innerHTML = question.question;
+        answersContainer.innerHTML = "";
+        question.answers.forEach((answer, index) => {
+            const button = document.createElement('button');
+            button.innerHTML = answer;
+            button.onclick = () => checkAnswer(index, question.correct, question.answers[question.correct]);
+            answersContainer.appendChild(button);
+        });
+
+        // Remover a pergunta já feita
+        questions.splice(randomIndex, 1);
+        if (questions.length === 0) {
+            endQuiz();
+        }
+    }
+
+    function checkAnswer(selected, correct, correctAnswer) {
+        const resultContainer = document.getElementById('result');
+        if (selected === correct) {
+            resultContainer.innerHTML = "Correto!";
+            correctAnswersCount++;
+        } else {
+            resultContainer.innerHTML = `Incorreto! A resposta correta é: ${correctAnswer}`;
+        }
+        document.getElementById('next').style.display = "block";
+    }
+
+    function endQuiz() {
+        const quizContainer = document.getElementById('quiz');
+        quizContainer.innerHTML = `<h1>Quiz Finalizado!</h1><p>Você acertou ${correctAnswersCount} de ${10 - questions.length} perguntas.</p>`;
+    }
+
+    window.onload = function() {
+        document.getElementById('next').onclick = showQuestion;
+        showQuestion();
+    };
+</script>
+
+</body>
+</html>
+
